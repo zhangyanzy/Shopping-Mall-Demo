@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.tarenwang.shopping_mall_demo.app.MainActivity">
+
+    <!--标题栏-->
+    <!--<include layout="@layout/titlebar" />-->
+    <!--FrameLayout-->
+    <FrameLayout
+        android:id="@+id/fl_content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+    <!--底部的RadioGroup-->
+    <RadioGroup
+        android:id="@+id/rg_main"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#11000000"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="5dp">
+
+        <RadioButton
+            android:id="@+id/rdb_fist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:button="@android:color/transparent"
+            android:drawablePadding="3dp"
+            android:drawableTop="@drawable/first_drawable_selector"
+            android:gravity="center"
+            android:text="第一界面"
+            android:textColor="@drawable/text_color_drawable_selector"
+            android:textSize="10dp" />
+
+        <RadioButton
+            android:id="@+id/rdb_second"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:button="@android:color/transparent"
+            android:drawablePadding="3dp"
+            android:drawableTop="@drawable/second_drawable_selector"
+            android:gravity="center"
+            android:text="第二界面"
+            android:textColor="@drawable/text_color_drawable_selector"
+            android:textSize="10dp" />
+
+        <RadioButton
+            android:id="@+id/rdb_third"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:button="@android:color/transparent"
+            android:drawablePadding="3dp"
+            android:drawableTop="@drawable/third_drawable_selector"
+            android:gravity="center"
+            android:text="第三界面"
+            android:textColor="@drawable/text_color_drawable_selector"
+            android:textSize="10dp" />
+
+        <RadioButton
+            android:id="@+id/rdb_other"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:button="@android:color/transparent"
+            android:drawablePadding="3dp"
+            android:drawableTop="@drawable/other_drawable_selector"
+            android:gravity="center"
+            android:text="第四界面"
+            android:textColor="@drawable/text_color_drawable_selector"
+            android:textSize="10dp" />
+    </RadioGroup>
+</LinearLayout>
