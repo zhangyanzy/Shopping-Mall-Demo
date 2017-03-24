@@ -10,12 +10,12 @@ import android.widget.TextView;
  * Created by Administrator on 2017/3/21.
  */
 
-public class FirstFragmentAdapter extends BaseAdapter {
+public class HomeFragmentAdapter1 extends BaseAdapter {
 
     private final Context mContent;
     private final String[] mDatas;
 
-    public FirstFragmentAdapter(Context context, String[] datas) {
+    public HomeFragmentAdapter1(Context context, String[] datas) {
         this.mContent = context;
         this.mDatas = datas;
     }

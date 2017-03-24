@@ -4,13 +4,12 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.widget.RadioGroup;
 
 import com.tarenwang.shopping_mall_demo.R;
 import com.tarenwang.shopping_mall_demo.base.BaseFragment;
-import com.tarenwang.shopping_mall_demo.fragment.FirstFragment;
+import com.tarenwang.shopping_mall_demo.fragment.HomeFragment;
 import com.tarenwang.shopping_mall_demo.fragment.OtherFragment;
 import com.tarenwang.shopping_mall_demo.fragment.SecondFragment;
 import com.tarenwang.shopping_mall_demo.fragment.ThirdFragment;
@@ -125,7 +124,7 @@ public class MainActivity extends FragmentActivity {
 
     private void initFragment() {
         mBaseFragment = new ArrayList<>();
-        mBaseFragment.add(new FirstFragment());
+        mBaseFragment.add(new HomeFragment());
         mBaseFragment.add(new SecondFragment());
         mBaseFragment.add(new ThirdFragment());
         mBaseFragment.add(new OtherFragment());
