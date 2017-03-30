@@ -39,12 +39,16 @@ public abstract class BaseFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         initData();
+        initEvent();
     }
 
     /**
      * 当子类需要初始化数据，或者INTENT绑定数据，展示数据的。。。。。。
      */
     protected  void initData(){
+
+    }
+    public void initEvent() {
 
     }
 }

@@ -16,13 +16,14 @@
             android:configChanges="orientation|screenLayout|keyboardHidden">
 
         </activity>
-        <activity android:name=".app.WelcomeActivity">
+        <activity android:name=".app.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".app.GuideActivity"/>
     </application>
 
 </manifest>

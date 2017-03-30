@@ -30,6 +30,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import static android.R.id.list;
+
 /**
  * Created by Administrator on 2017/3/21.
  */
@@ -37,7 +39,6 @@ import java.util.Map;
 public class HomeFragment extends BaseFragment implements View.OnClickListener, AdapterView.OnItemClickListener {
 
     private FragmentHomeBinding binding;
-
     private HomeFragmentAdapter adapter;
     private Banner banner;
 
@@ -46,6 +47,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
     private TextView mMessage;
     private ImageView mTop;
     private RecyclerView mRv;
+    private List<String> list;
 
     private List<Map<String, Object>> dataList;
     //图片
@@ -58,7 +60,6 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
     private SimpleAdapter simpleAdapter;
 
 
-
     @Override
     protected View initView() {
         View view = View.inflate(mContext, R.layout.fragment_home, null);
@@ -68,7 +69,8 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
         banner = (Banner) view.findViewById(R.id.banner);
         mMessage = (TextView) view.findViewById(R.id.tv_message_home);
         mMessage.setOnClickListener(this);
-        List<String> list = new ArrayList<>();
+
+        list = new ArrayList<>();
         list.add("http://img4.imgtn.bdimg.com/it/u=1849328229,2650485437&fm=214&gp=0.jpg");
         list.add("http://images.7723.cn/attachments/jietu/44953/jietub7eee801f9dafadf265e3ad5cd1d132c20141202BM3YYc.jpg");
         list.add("http://img2.imgtn.bdimg.com/it/u=4100327403,4075914187&fm=214&gp=0.jpg");
@@ -118,9 +120,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
             case R.id.tv_message_home:
                 Toast.makeText(getContext(), "message", Toast.LENGTH_SHORT).show();
                 break;
-//            case R.id.top_home:
-//                //mRv.scrollToPosition(0);
-//                break;
+
             case R.id.tv_search_home:
                 Toast.makeText(getContext(), "Search", Toast.LENGTH_SHORT).show();
                 break;
@@ -147,16 +147,34 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
 
         @Override
         public void displayImage(Context context, final Object path, final ImageView imageView) {
+
+            int index = 0;
+            for (int i = 0; i < list.size(); i++) {
+                if (list.get(i).equals(path)) {
+                    index = i;
+                }
+            }
             Glide.with(context).load(path).placeholder(R.mipmap.ic_launcher).centerCrop().
                     error(R.mipmap.ic_launcher).crossFade().into(imageView);
+            final int finalIndex = index;
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
+                    switch (finalIndex) {
+                        case 0:
+                            Toast.makeText(getActivity(),(String)path,Toast.LENGTH_SHORT).show();
+                            break;
+                        case 1:
+                            Toast.makeText(getActivity(),(String)path,Toast.LENGTH_SHORT).show();
+                            break;
+                        case 2:
+                            Toast.makeText(getActivity(),(String)path,Toast.LENGTH_SHORT).show();
+                            break;
+                        default:
+                            break;
+                    }
                 }
             });
         }
     }
-
-
 }

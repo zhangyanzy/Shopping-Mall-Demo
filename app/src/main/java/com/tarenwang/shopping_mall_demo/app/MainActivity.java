@@ -7,9 +7,12 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.widget.RadioGroup;
 
+import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
+import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
 import com.tarenwang.shopping_mall_demo.R;
 import com.tarenwang.shopping_mall_demo.base.BaseFragment;
 import com.tarenwang.shopping_mall_demo.fragment.HomeFragment;
+import com.tarenwang.shopping_mall_demo.fragment.LeftFragment;
 import com.tarenwang.shopping_mall_demo.fragment.OtherFragment;
 import com.tarenwang.shopping_mall_demo.fragment.SecondFragment;
 import com.tarenwang.shopping_mall_demo.fragment.ThirdFragment;
@@ -17,19 +20,34 @@ import com.tarenwang.shopping_mall_demo.fragment.ThirdFragment;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends SlidingFragmentActivity {
 
     private RadioGroup mdg_main;
     private List<BaseFragment> mBaseFragment;
     //定义选中的Fragemnt的相对应位置
     private int position;
     private Fragment mContent;
+    private Fragment LeftFragment;
+
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initView();
         initFragment();
         setListener();
+    }
+
+    private void initView() {
+        setContentView(R.layout.activity_main);
+        mdg_main = (RadioGroup) findViewById(R.id.rg_main);
+        LeftFragment = new LeftFragment();
+        setBehindContentView(R.layout.fragment_left);
+        getSupportFragmentManager().beginTransaction().replace(R.id.fl_menu_left,LeftFragment).commit();
+        SlidingMenu menu = getSlidingMenu();
+        menu.setMode(SlidingMenu.LEFT);
+        menu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);//全屏位置滑动
+        menu.setBehindOffset(200);
+
     }
 
     private void setListener() {
@@ -128,10 +146,7 @@ public class MainActivity extends FragmentActivity {
         mBaseFragment.add(new SecondFragment());
         mBaseFragment.add(new ThirdFragment());
         mBaseFragment.add(new OtherFragment());
+        mBaseFragment.add(new LeftFragment());
     }
 
-    private void initView() {
-        setContentView(R.layout.activity_main);
-        mdg_main = (RadioGroup) findViewById(R.id.rg_main);
-    }
 }
