@@ -4,21 +4,10 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-
-    <com.astuetz.PagerSlidingTabStrip
-        android:id="@+id/main_tab"
+    <ListView
+        android:id="@+id/lv_second"
         android:layout_width="match_parent"
-        android:layout_height="48dp"></com.astuetz.PagerSlidingTabStrip>
-
-    <android.support.v4.view.ViewPager
-        android:id="@+id/main_viewpager"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-    </android.support.v4.view.ViewPager>
-
-
-
+        android:layout_height="match_parent"></ListView>
 
 
 </LinearLayout>

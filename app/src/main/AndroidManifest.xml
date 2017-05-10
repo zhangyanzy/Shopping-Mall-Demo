@@ -16,6 +16,7 @@
             android:configChanges="orientation|screenLayout|keyboardHidden">
 
         </activity>
+
         <activity android:name=".app.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
