@@ -4,9 +4,9 @@ android {
     compileSdkVersion 24
     buildToolsVersion "24.0.1"
 
-    dataBinding{
-        enabled = true
-    }
+//    dataBinding{
+//        enabled = true
+//    }
     defaultConfig {
         applicationId "com.tarenwang.shopping_mall_demo"
         minSdkVersion 16

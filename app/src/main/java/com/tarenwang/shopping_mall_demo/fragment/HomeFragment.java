@@ -2,6 +2,7 @@ package com.tarenwang.shopping_mall_demo.fragment;
 
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Handler;
@@ -20,13 +21,16 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.tarenwang.shopping_mall_demo.R;
+import com.tarenwang.shopping_mall_demo.Utils;
+import com.tarenwang.shopping_mall_demo.activity.SystemVideoPlayerActivity;
 import com.tarenwang.shopping_mall_demo.adapter.HomeFragmentAdapter;
+import com.tarenwang.shopping_mall_demo.adapter.VideoHolderAdapter;
 import com.tarenwang.shopping_mall_demo.base.BaseFragment;
 import com.tarenwang.shopping_mall_demo.bean.MediaItem;
-import com.tarenwang.shopping_mall_demo.databinding.FragmentHomeBinding;
 import com.youth.banner.Banner;
 import com.youth.banner.BannerConfig;
 import com.youth.banner.loader.ImageLoader;
+
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,33 +44,44 @@ import java.util.Map;
 
 public class HomeFragment extends BaseFragment implements View.OnClickListener, AdapterView.OnItemClickListener {
 
-//    private Handler handler = new Handler(){
-//        @Override
-//        public void handleMessage(Message msg) {
-//            super.handleMessage(msg);
-//            if (mediaItems!=null&&mediaItems.size()>0){
-//                //有数据  设置适配器
-//            }else {
-//                //没有数据 显示数据
-//            }
-//        }
-//    };
+    private VideoHolderAdapter videoHolderAdapter;
 
-    private FragmentHomeBinding binding;
+
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+
+            if (mediaItems != null && mediaItems.size() > 0) {
+                //有数据  设置适配器
+                videoHolderAdapter = new VideoHolderAdapter(getContext(), mediaItems);
+                mListView.setAdapter(videoHolderAdapter);
+                mNoMedia.setVisibility(View.GONE);
+            } else {
+                //没有数据 显示数据
+                mNoMedia.setVisibility(View.VISIBLE);
+            }
+            mLoading.setVisibility(View.GONE);
+        }
+    };
+
     private HomeFragmentAdapter adapter;
     private Banner banner;
 
     private GridView mGv;
     private TextView mSearch;
     private TextView mMessage;
+
     private ListView mListView;
     private TextView mNoMedia;
     private ProgressBar mLoading;
+
     private ImageView mTop;
     private RecyclerView mRv;
     private List<String> list;
 
-    private Context mContext ;
+    private Utils utils;
+
 
     private List<Map<String, Object>> dataList;
     //图片
@@ -83,7 +98,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
 
     @Override
     protected View initView() {
-        View view = View.inflate(mContext, R.layout.fragment_home, null);
+        View view = View.inflate(getContext(), R.layout.fragment_home, null);
         mGv = (GridView) view.findViewById(R.id.gv_channel);
         mSearch = (TextView) view.findViewById(R.id.tv_search_home);
         mSearch.setOnClickListener(this);
@@ -93,7 +108,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
         mListView = (ListView) view.findViewById(R.id.home_list_view);
         mNoMedia = (TextView) view.findViewById(R.id.no_media);
         mLoading = (ProgressBar) view.findViewById(R.id.home_loading);
-
+        utils = new Utils();
 
         list = new ArrayList<>();
         list.add("http://img4.imgtn.bdimg.com/it/u=1849328229,2650485437&fm=214&gp=0.jpg");
@@ -115,8 +130,30 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
                 new int[]{R.id.item_image, R.id.item_textview});
         mGv.setAdapter(simpleAdapter);
         mGv.setOnItemClickListener(this);
+
+        /**
+         * listview的Item点击事件
+         */
+        mListView.setOnItemClickListener(new MyOnItemClickListener());
         return view;
 
+    }
+
+    class MyOnItemClickListener implements AdapterView.OnItemClickListener {
+
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            MediaItem mediaItem = mediaItems.get(position);
+            //1、调起系统所有的播放器
+//            Intent intent = new Intent();
+//            intent.setDataAndType(Uri.parse(mediaItem.getData()), "video/*");
+//            getContext().startActivity(intent);
+            //2.调用自己的播放器
+            Intent intent = new Intent(getContext(),SystemVideoPlayerActivity.class);
+            intent.setDataAndType(Uri.parse(mediaItem.getData()), "video/*");
+            getContext().startActivity(intent);
+
+        }
     }
 
 
@@ -141,7 +178,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
     protected void initData() {
         super.initData();
         //加载本地视频
-        //getDataFromLocal();
+        getDataFromLocal();
     }
 
     /**
@@ -156,7 +193,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
             @Override
             public void run() {
                 //创建出内容提供者
-                ContentResolver resolver = mContext.getContentResolver();
+                ContentResolver resolver = getContext().getContentResolver();
                 Uri uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
                 //通过内容提供者去查询
                 String[] objs = {
@@ -191,12 +228,13 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
                     cursor.close();
                 }
                 //
-                // handler.sendEmptyMessage(0);
+                handler.sendEmptyMessage(0);
 
             }
         }).start();
 
     }
+
 
     /**
      * 普通点击事件
@@ -209,7 +247,6 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
             case R.id.tv_message_home:
                 Toast.makeText(getContext(), "message", Toast.LENGTH_SHORT).show();
                 break;
-
             case R.id.tv_search_home:
                 Toast.makeText(getContext(), "Search", Toast.LENGTH_SHORT).show();
                 break;

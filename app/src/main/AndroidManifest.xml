@@ -17,7 +17,9 @@
 
         </activity>
 
-        <activity android:name=".app.SplashActivity">
+        <activity android:name=".app.SplashActivity"
+
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -25,6 +27,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".app.GuideActivity"/>
+        <activity android:name=".activity.SystemVideoPlayerActivity"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+            />
     </application>
 
 </manifest>

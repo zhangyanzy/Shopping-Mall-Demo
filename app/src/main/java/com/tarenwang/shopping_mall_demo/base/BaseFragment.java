@@ -16,9 +16,7 @@ public abstract class BaseFragment extends Fragment {
 
     protected Context mContext;
 
-//    public BaseFragment(Context mContext) {
-//        this.mContext = mContext;
-//    }
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

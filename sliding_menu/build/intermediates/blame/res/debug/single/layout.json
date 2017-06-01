@@ -140,12 +140,12 @@
         "source": "D:\\WorkSpace\\Shopping-Mall-Demo\\sliding_menu\\res\\layout\\slidingmenumain.xml"
     },
     {
-        "merged": "D:\\WorkSpace\\Shopping-Mall-Demo\\sliding_menu\\build\\intermediates\\res\\merged\\debug\\layout\\abc_select_dialog_material.xml",
-        "source": "D:\\WorkSpace\\Shopping-Mall-Demo\\sliding_menu\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\24.2.1\\res\\layout\\abc_select_dialog_material.xml"
-    },
-    {
         "merged": "D:\\WorkSpace\\Shopping-Mall-Demo\\sliding_menu\\build\\intermediates\\res\\merged\\debug\\layout\\abc_screen_toolbar.xml",
         "source": "D:\\WorkSpace\\Shopping-Mall-Demo\\sliding_menu\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\24.2.1\\res\\layout\\abc_screen_toolbar.xml"
+    },
+    {
+        "merged": "D:\\WorkSpace\\Shopping-Mall-Demo\\sliding_menu\\build\\intermediates\\res\\merged\\debug\\layout\\abc_select_dialog_material.xml",
+        "source": "D:\\WorkSpace\\Shopping-Mall-Demo\\sliding_menu\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\24.2.1\\res\\layout\\abc_select_dialog_material.xml"
     },
     {
         "merged": "D:\\WorkSpace\\Shopping-Mall-Demo\\sliding_menu\\build\\intermediates\\res\\merged\\debug\\layout\\abc_action_bar_up_container.xml",

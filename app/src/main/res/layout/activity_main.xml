@@ -10,7 +10,7 @@
     <!--标题栏-->
     <!--<include layout="@layout/titlebar" />-->
     <!--FrameLayout-->
-    <FrameLayout
+      <FrameLayout
         android:id="@+id/fl_content"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -23,14 +23,15 @@
         android:background="#11000000"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:padding="5dp">
+        android:padding="3dp">
 
         <RadioButton
             android:id="@+id/rdb_fist"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:layout_weight="1"
-            android:button="@android:color/transparent"
+            android:button="@null"
             android:drawablePadding="3dp"
             android:drawableTop="@drawable/first_drawable_selector"
             android:gravity="center"
@@ -42,8 +43,9 @@
             android:id="@+id/rdb_second"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:layout_weight="1"
-            android:button="@android:color/transparent"
+            android:button="@null"
             android:drawablePadding="3dp"
             android:drawableTop="@drawable/second_drawable_selector"
             android:gravity="center"
@@ -55,8 +57,9 @@
             android:id="@+id/rdb_third"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:layout_weight="1"
-            android:button="@android:color/transparent"
+            android:button="@null"
             android:drawablePadding="3dp"
             android:drawableTop="@drawable/third_drawable_selector"
             android:gravity="center"
@@ -68,8 +71,9 @@
             android:id="@+id/rdb_other"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:layout_weight="1"
-            android:button="@android:color/transparent"
+            android:button="@null"
             android:drawablePadding="3dp"
             android:drawableTop="@drawable/other_drawable_selector"
             android:gravity="center"
