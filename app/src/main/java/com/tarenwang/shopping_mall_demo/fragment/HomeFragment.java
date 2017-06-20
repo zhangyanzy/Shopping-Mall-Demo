@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
@@ -44,8 +45,8 @@ import java.util.Map;
 
 public class HomeFragment extends BaseFragment implements View.OnClickListener, AdapterView.OnItemClickListener {
 
-    private VideoHolderAdapter videoHolderAdapter;
 
+    private VideoHolderAdapter videoHolderAdapter;
 
     private Handler handler = new Handler() {
         @Override
@@ -132,11 +133,11 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
         mGv.setOnItemClickListener(this);
 
         /**
-         * listview的Item点击事件
+         * ListView的Item点击事件
          */
+
         mListView.setOnItemClickListener(new MyOnItemClickListener());
         return view;
-
     }
 
     class MyOnItemClickListener implements AdapterView.OnItemClickListener {
@@ -149,8 +150,15 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
 //            intent.setDataAndType(Uri.parse(mediaItem.getData()), "video/*");
 //            getContext().startActivity(intent);
             //2.调用自己的播放器
-            Intent intent = new Intent(getContext(),SystemVideoPlayerActivity.class);
-            intent.setDataAndType(Uri.parse(mediaItem.getData()), "video/*");
+//            Intent intent = new Intent(getContext(),SystemVideoPlayerActivity.class);
+//            intent.setDataAndType(Uri.parse(mediaItem.getData()), "video/*");
+//            getContext().startActivity(intent);
+            //3.传递列表数据--对象--序列化
+            Intent intent = new Intent(getContext(), SystemVideoPlayerActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("videoList", mediaItems);
+            intent.putExtras(bundle);
+            intent.putExtra("position", position);
             getContext().startActivity(intent);
 
         }

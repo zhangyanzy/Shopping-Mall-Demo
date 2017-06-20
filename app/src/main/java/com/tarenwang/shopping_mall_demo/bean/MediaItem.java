@@ -1,11 +1,14 @@
 package com.tarenwang.shopping_mall_demo.bean;
 
+
+import java.io.Serializable;
+
 /**
  * Created by zhangYan on 2017/5/10.
  * 代表视频和音频的信息
  */
 
-public class MediaItem {
+public class MediaItem implements Serializable {
 
     private String name;
 

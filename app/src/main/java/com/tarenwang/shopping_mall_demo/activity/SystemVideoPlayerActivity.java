@@ -1,11 +1,16 @@
 package com.tarenwang.shopping_mall_demo.activity;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
 import android.view.MotionEvent;
 import android.view.View;
@@ -19,6 +24,11 @@ import android.widget.VideoView;
 
 import com.tarenwang.shopping_mall_demo.R;
 import com.tarenwang.shopping_mall_demo.Utils;
+import com.tarenwang.shopping_mall_demo.bean.MediaItem;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by zhangYan on 2017/5/24.
@@ -35,7 +45,12 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
     private static final int PROGRESS = 1;
     private VideoView mVideoView;
     private Uri uri;
+
     private Utils utils;
+    /**
+     * 监听电量的
+     */
+    private MyReceiver receiver;
 
     private LinearLayout llTop;
     private TextView tvName;
@@ -53,6 +68,15 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
     private Button btnVideoStartPause;
     private Button btnNext;
     private Button btnVideoSwitchScreen;
+    private Object data;
+    /**
+     * 传入进来的视频列表
+     */
+    private ArrayList<MediaItem> mediaItems;
+    /**
+     * 要播放列表中的具体位置
+     */
+    private int position;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +84,9 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
         setContentView(R.layout.activity_system_video_player);
         utils = new Utils();
         init();
+        setListener();
+        getData();
+        setData();
     }
 
     @Nullable
@@ -103,17 +130,78 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
 
 
         mVideoView = (VideoView) findViewById(R.id.video_view);
-        setListener();
 
 
-        //得到播放地址
-        uri = getIntent().getData();
-        if (uri != null) {
-            mVideoView.setVideoURI(uri);
-
-        }
         //设置系统的控制面板
 //        mVideoView.setMediaController(new MediaController(this));
+
+        /**
+         * 注册电量广播
+         */
+        receiver = new MyReceiver();
+        IntentFilter intentFilter = new IntentFilter();
+        //当电量发生变化的时候发送这个广播
+        intentFilter.addAction(Intent.ACTION_BATTERY_CHANGED);
+        registerReceiver(receiver, intentFilter);
+    }
+
+    private void setData() {
+        if (mediaItems != null && mediaItems.size() > 0) {
+            MediaItem mediaItem = mediaItems.get(position);
+            tvName.setText(mediaItem.getName());//设置视频名称
+            mVideoView.setVideoPath(mediaItem.getData());
+        } else if (uri != null) {
+            tvName.setText(uri.toString());//设置视频名称
+            mVideoView.setVideoURI(uri);
+        } else {
+            Toast.makeText(getApplicationContext(), "God,你没有传递数据", Toast.LENGTH_SHORT).show();
+        }
+        setButtonState();
+
+    }
+
+    private void getData() {
+        //得到播放地址
+        uri = getIntent().getData();
+        mediaItems = (ArrayList<MediaItem>) getIntent().getSerializableExtra("videoList");
+        position = getIntent().getIntExtra("position", 0);
+
+    }
+
+
+    class MyReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            int level = intent.getIntExtra("level", 0);
+            setBattery(level);
+        }
+
+    }
+
+    /**
+     * 电量设置
+     *
+     * @param level
+     */
+    private void setBattery(int level) {
+        if (level <= 0) {
+            ivBattery.setImageResource(R.mipmap.ic_battery_0);
+        } else if (level <= 10) {
+            ivBattery.setImageResource(R.mipmap.ic_battery_10);
+        } else if (level <= 20) {
+            ivBattery.setImageResource(R.mipmap.ic_battery_20);
+        } else if (level <= 40) {
+            ivBattery.setImageResource(R.mipmap.ic_battery_40);
+        } else if (level <= 60) {
+            ivBattery.setImageResource(R.mipmap.ic_battery_60);
+        } else if (level <= 80) {
+            ivBattery.setImageResource(R.mipmap.ic_battery_80);
+        } else if (level <= 100) {
+            ivBattery.setImageResource(R.mipmap.ic_battery_100);
+        } else {
+            ivBattery.setImageResource(R.mipmap.ic_battery_100);
+        }
     }
 
     private void setListener() {
@@ -128,14 +216,21 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState, PersistableBundle persistentState) {
+        super.onCreate(savedInstanceState, persistentState);
+    }
+
+    @Override
     public void onClick(View v) {
         if (v == btnVoice) {
             // Handle clicks for btnVoice
         } else if (v == btnSwitchPlayer) {
             // Handle clicks for btnSwitchPlayer
         } else if (v == btnExit) {
+            finish();
             // Handle clicks for btnExit
         } else if (v == btnVideoPre) {
+            playPreVideo();
             // Handle clicks for btnVideoPre
         } else if (v == btnVideoStartPause) {
             if (mVideoView.isPlaying()) {
@@ -147,10 +242,89 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
                 btnVideoStartPause.setBackgroundResource(R.drawable.btn_pause_selector);
             }
         } else if (v == btnNext) {
+            playNextVideo();
             // Handle clicks for btnNext
         } else if (v == btnVideoSwitchScreen) {
             // Handle clicks for btnVideoSwitchScreen
         }
+    }
+
+    /**
+     * 播放上一个视频
+     */
+    private void playPreVideo() {
+        if (mediaItems != null && mediaItems.size() > 0) {
+            //播放下一个
+            position--;
+            if (position >= 0) {
+                MediaItem mediaItem = mediaItems.get(position);
+                tvName.setText(mediaItem.getName());
+                mVideoView.setVideoPath(mediaItem.getData());
+                //设置按钮状态
+                setButtonState();
+            }
+        } else if (uri != null) {
+            //上一个和下一个按钮设置灰色并且不可以点击
+            setButtonState();
+        }
+
+    }
+
+    /**
+     * 点击播放下一个视频点击事件
+     */
+    private void playNextVideo() {
+        if (mediaItems != null&&mediaItems.size()>0) {
+            //播放下一个
+            position++;
+            if (position < mediaItems.size()) {
+                MediaItem mediaItem = mediaItems.get(position);
+                tvName.setText(mediaItem.getName());
+                mVideoView.setVideoPath(mediaItem.getData());
+                //设置按钮状态
+                setButtonState();
+            }
+        } else if (uri != null) {
+            //上一个和下一个按钮设置灰色并且不可以点击
+            setButtonState();
+        }
+
+    }
+
+    /**
+     * 设置按钮状态
+     */
+    private void setButtonState() {
+        if (mediaItems != null && mediaItems.size() > 0) {
+            if (mediaItems.size() == 1) {
+                btnVideoPre.setBackgroundResource(R.drawable.btn_pre_gray);
+                btnVideoPre.setEnabled(false);
+                btnNext.setBackgroundResource(R.drawable.btn_next_gray);
+                btnNext.setEnabled(false);
+            } else if (mediaItems.size() == 2){
+                if (position == 0) {
+                    btnVideoPre.setBackgroundResource(R.drawable.btn_pre_gray);
+                    btnVideoPre.setEnabled(false);
+                } else if (position == mediaItems.size() - 1) {
+                    btnNext.setBackgroundResource(R.drawable.btn_next_gray);
+                    btnNext.setEnabled(false);
+                } else {
+                    btnVideoPre.setBackgroundResource(R.drawable.btn_video_pre_selector);
+                    btnVideoPre.setEnabled(true);
+                    btnNext.setBackgroundResource(R.drawable.btn_video_next_selector);
+                    btnNext.setEnabled(true);
+                }
+            }else {
+
+            }
+        } else if (uri != null) {
+            //两个按钮设置灰色
+            btnVideoPre.setBackgroundResource(R.drawable.btn_pre_gray);
+            btnVideoPre.setEnabled(false);
+            btnNext.setBackgroundResource(R.drawable.btn_next_gray);
+            btnNext.setEnabled(false);
+        }
+
     }
 
     private Handler handler = new Handler() {
@@ -165,6 +339,8 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
                     seekbarVideo.setProgress(currentPosition);
                     //更新播放进度文本
                     tvCurrentTime.setText(utils.stringForTime(currentPosition));
+                    //设置系统时间
+                    tvSystemTime.setText(getSystemTime());
                     //每秒更新一次
                     handler.removeMessages(PROGRESS);
                     handler.sendEmptyMessageDelayed(PROGRESS, 1000);
@@ -172,6 +348,16 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
             }
         }
     };
+
+    /**
+     * 得到系统时间
+     *
+     * @return
+     */
+    private String getSystemTime() {
+        SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
+        return format.format(new Date());
+    }
 
     /**
      * 关于SeekBar的更新
@@ -209,7 +395,8 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
 
         @Override
         public void onCompletion(MediaPlayer mp) {
-            Toast.makeText(getApplicationContext(), uri + "播放完成...", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getApplicationContext(), uri + "播放完成...", Toast.LENGTH_SHORT).show();
+            playNextVideo();
         }
     }
 
@@ -255,5 +442,15 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
     public boolean onTouchEvent(MotionEvent event) {
 
         return super.onTouchEvent(event);
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (receiver != null) {
+            unregisterReceiver(receiver);
+            receiver = null;
+        }
+
+        super.onDestroy();
     }
 }
