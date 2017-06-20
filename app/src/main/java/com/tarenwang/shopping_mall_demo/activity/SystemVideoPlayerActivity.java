@@ -12,6 +12,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -40,8 +41,14 @@ import java.util.Date;
  * https://www.buzzingandroid.com/tools/android-layout-finder可以实例化布局
  */
 public class SystemVideoPlayerActivity extends Activity implements View.OnClickListener {
-    //视频进度的更新
 
+    /**
+     * 定义手势识别器
+     */
+    private GestureDetector detector;
+
+
+    //视频进度的更新
     private static final int PROGRESS = 1;
     private VideoView mVideoView;
     private Uri uri;
@@ -87,7 +94,29 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
         setListener();
         getData();
         setData();
+        //实例化手势识别器,并且重写双击,点击，长按
+        detector = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener() {
+            @Override
+            public boolean onDoubleTap(MotionEvent e) {
+                Toast.makeText(SystemVideoPlayerActivity.this, "双击", Toast.LENGTH_SHORT).show();
+                return super.onDoubleTap(e);
+            }
+
+            @Override
+            public void onLongPress(MotionEvent e) {
+                super.onLongPress(e);
+//                Toast.makeText(SystemVideoPlayerActivity.this, "长按", Toast.LENGTH_SHORT).show();
+                startAndPause();
+            }
+
+            @Override
+            public boolean onSingleTapConfirmed(MotionEvent e) {
+                Toast.makeText(SystemVideoPlayerActivity.this, "单击事件", Toast.LENGTH_SHORT).show();
+                return super.onSingleTapConfirmed(e);
+            }
+        });
     }
+
 
     @Nullable
     @Override
@@ -233,19 +262,26 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
             playPreVideo();
             // Handle clicks for btnVideoPre
         } else if (v == btnVideoStartPause) {
-            if (mVideoView.isPlaying()) {
-                //视频在播放
-                mVideoView.pause();
-                btnVideoStartPause.setBackgroundResource(R.drawable.btn_start_selector);
-            } else {
-                mVideoView.start();
-                btnVideoStartPause.setBackgroundResource(R.drawable.btn_pause_selector);
-            }
+            startAndPause();
         } else if (v == btnNext) {
             playNextVideo();
             // Handle clicks for btnNext
         } else if (v == btnVideoSwitchScreen) {
             // Handle clicks for btnVideoSwitchScreen
+        }
+    }
+
+    /**
+     * 开始播放或者停止播放
+     */
+    private void startAndPause() {
+        if (mVideoView.isPlaying()) {
+            //视频在播放
+            mVideoView.pause();
+            btnVideoStartPause.setBackgroundResource(R.drawable.btn_start_selector);
+        } else {
+            mVideoView.start();
+            btnVideoStartPause.setBackgroundResource(R.drawable.btn_pause_selector);
         }
     }
 
@@ -274,7 +310,7 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
      * 点击播放下一个视频点击事件
      */
     private void playNextVideo() {
-        if (mediaItems != null&&mediaItems.size()>0) {
+        if (mediaItems != null && mediaItems.size() > 0) {
             //播放下一个
             position++;
             if (position < mediaItems.size()) {
@@ -301,7 +337,7 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
                 btnVideoPre.setEnabled(false);
                 btnNext.setBackgroundResource(R.drawable.btn_next_gray);
                 btnNext.setEnabled(false);
-            } else if (mediaItems.size() == 2){
+            } else if (mediaItems.size() == 2) {
                 if (position == 0) {
                     btnVideoPre.setBackgroundResource(R.drawable.btn_pre_gray);
                     btnVideoPre.setEnabled(false);
@@ -314,7 +350,7 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
                     btnNext.setBackgroundResource(R.drawable.btn_video_next_selector);
                     btnNext.setEnabled(true);
                 }
-            }else {
+            } else {
 
             }
         } else if (uri != null) {
@@ -438,9 +474,13 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
         }
     }
 
+    /**
+     * 手势识别器
+     */
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-
+        //把事件传给手势识别器
+        detector.onTouchEvent(event);
         return super.onTouchEvent(event);
     }
 
